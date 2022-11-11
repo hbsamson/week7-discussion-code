@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:week7_networking_discussion/api/todo_api.dart';
 import 'package:week7_networking_discussion/models/todo_model.dart';
+import 'package:week7_networking_discussion/api/firebase_todo_api.dart';
 
 class TodoListProvider with ChangeNotifier {
   // List<Todo> _todoList = [
@@ -34,12 +35,14 @@ class TodoListProvider with ChangeNotifier {
 
   late TodoAPI todoAPI;
   late Future<List<Todo>> _todoList;
+  late FirebaseTodoAPI firebaseService;
 
   Future<List<Todo>> get todo => _todoList;
 
   TodoListProvider() {
     todoAPI = TodoAPI();
     fetchTodos();
+    firebaseService = FirebaseTodoAPI();
   }
 
   void fetchTodos() {
@@ -47,8 +50,9 @@ class TodoListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addTodo(Todo item) {
-    // _todoList.add(item);
+  void addTodo(Todo item) async {
+    String message = await firebaseService.addTodo(item.toJson(item));
+    print(message);
     notifyListeners();
   }
 
