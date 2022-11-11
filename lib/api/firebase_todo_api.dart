@@ -5,7 +5,8 @@ class FirebaseTodoAPI {
 
   Future<String> addTodo(Map<String, dynamic> todo) async {
     try {
-      await db.collection("todos").add(todo);
+      final docRef = await db.collection("todos").add(todo);
+      await db.collection("todos").doc(docRef.id).update({'id': docRef.id});
 
       return "Successfully added todo!";
     } on FirebaseException catch (e) {

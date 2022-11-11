@@ -45,6 +45,7 @@ class TodoListProvider with ChangeNotifier {
   }
 
   void deleteTodo() async {
+    print("Selected: $_selectedTodo.id");
     String message = await firebaseService.deleteTodo(_selectedTodo!.id);
     print(message);
     notifyListeners();
