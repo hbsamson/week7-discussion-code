@@ -4,49 +4,25 @@
   Description: Sample todo app with networking
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:week7_networking_discussion/api/todo_api.dart';
 import 'package:week7_networking_discussion/models/todo_model.dart';
 import 'package:week7_networking_discussion/api/firebase_todo_api.dart';
 
 class TodoListProvider with ChangeNotifier {
-  // List<Todo> _todoList = [
-  //   Todo(
-  //     completed: true,
-  //     userId: 1,
-  //     id: 1,
-  //     title: "Grocery",
-  //   ),
-  //   Todo(
-  //     completed: true,
-  //     userId: 1,
-  //     id: 2,
-  //     title: "Bills",
-  //   ),
-  //   Todo(
-  //     completed: false,
-  //     userId: 1,
-  //     id: 3,
-  //     title: "Walk dog",
-  //   ),
-  // ];
-  // getter
-  // List<Todo> get todo => _todoList;
-
-  late TodoAPI todoAPI;
-  late Future<List<Todo>> _todoList;
   late FirebaseTodoAPI firebaseService;
-
-  Future<List<Todo>> get todo => _todoList;
+  late Stream<QuerySnapshot> _todosStream;
 
   TodoListProvider() {
-    todoAPI = TodoAPI();
-    fetchTodos();
     firebaseService = FirebaseTodoAPI();
+    fetchTodos();
   }
 
-  void fetchTodos() {
-    _todoList = todoAPI.fetchTodos();
+  Stream<QuerySnapshot> get todos => _todosStream;
+
+  fetchTodos() {
+    _todosStream = firebaseService.getAllTodos();
     notifyListeners();
   }
 
