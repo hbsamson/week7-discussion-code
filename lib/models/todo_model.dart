@@ -4,6 +4,8 @@
   Description: Sample todo app with networking
 */
 
+import 'dart:convert';
+
 class Todo {
   final int userId;
   final int id;
@@ -16,4 +18,18 @@ class Todo {
     required this.title,
     required this.completed,
   });
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+      completed: json['completed'],
+    );
+  }
+
+  static List<Todo> fromJsonArray(String jsonData) {
+    final Iterable<dynamic> data = jsonDecode(jsonData);
+    return data.map<Todo>((dynamic d) => Todo.fromJson(d)).toList();
+  }
 }
